@@ -47,8 +47,13 @@ def handle_demand(data):
     # Ensure the power balance stays within the limits (0-100)
     power_balance[branch] = max(0, min(power_balance[branch], 100))
 
-    # Broadcast updated power balance to all clients
+    # Remove processed demand from the list
+    if demands:
+        demands.pop(0)
+
+    # Broadcast updated demands and power balance to all clients
     broadcast_power_balance()
+    socketio.emit('updateDemands', demands)
 
 # Route for branch leaders to send a demand
 @app.route('/api/send-demand/<branch>', methods=['POST'])
