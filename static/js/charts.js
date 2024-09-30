@@ -49,22 +49,29 @@ socket.on('updatePowerBalance', function(data) {
     updateCharts(data);
 });
 
-// Function to process a demand (triggered by buttons in the interface)
-function processDemand(branch, action) {
-    socket.emit('processDemand', { branch: branch, action: action });
-}
-
-// Update the demand inbox dynamically
+// Listen for new demands
 socket.on('newDemand', function(demands) {
-    const inbox = document.getElementById('demandInbox');
-    inbox.innerHTML = '';  // Clear existing demands
+    const inbox = document.getElementById('inbox');
+    inbox.innerHTML = '';  // Clear existing inbox
 
     demands.forEach(function(demand, index) {
         const demandDiv = document.createElement('div');
         demandDiv.classList.add('demand');
         demandDiv.innerHTML = `<span>${demand}</span>
-                               <button onclick="processDemand('branchName', 'pass')">Pass</button>
-                               <button onclick="processDemand('branchName', 'veto')">Veto</button>`;
+                               <button onclick="processDemand('${demand.split(' ')[2].toLowerCase()}', 'pass')">Pass</button>
+                               <button onclick="processDemand('${demand.split(' ')[2].toLowerCase()}', 'veto')">Veto</button>`;
         inbox.appendChild(demandDiv);
     });
 });
+
+// Send a demand as a branch leader
+function sendDemand(branch) {
+    fetch(`/api/send-demand/${branch}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => console.log(data));
+}
+
+// Process a demand (pass or veto)
+function processDemand(branch, action) {
+    socket.emit('processDemand', { branch: branch, action: action });
+}
