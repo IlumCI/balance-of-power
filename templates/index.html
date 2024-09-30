@@ -18,19 +18,16 @@
     <!-- Demand Inbox for President -->
     <div id="demandInbox">
         <h2>Demand Inbox</h2>
-        <div class="demand">
-            <span>Demand from Military: Increase Power</span>
-            <button onclick="processDemand('military', 'pass')">Pass</button>
-            <button onclick="processDemand('military', 'veto')">Veto</button>
-        </div>
-        <!-- You can dynamically add demands for other branches -->
+        <div id="inbox"></div>
     </div>
 
     <!-- Branch Leader's Send Demand Section -->
     <div id="sendDemand">
         <h2>Branch Leader Demand</h2>
-        <button onclick="processDemand('military', 'send')">Send Military Demand</button>
-        <!-- Additional buttons can be added for other branches -->
+        <button onclick="sendDemand('military')">Send Military Demand</button>
+        <button onclick="sendDemand('clergy')">Send Clergy Demand</button>
+        <button onclick="sendDemand('capitalists')">Send Capitalist Demand</button>
+        <button onclick="sendDemand('workers')">Send Worker Demand</button>
     </div>
 
     <!-- Load JavaScript for charts and WebSocket handling -->
