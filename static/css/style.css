@@ -15,3 +15,11 @@ canvas {
     width: 400px;
     height: 400px;
 }
+
+.demand {
+    margin: 10px;
+}
+
+button {
+    margin-left: 10px;
+}
