@@ -1,12 +1,21 @@
-// Get power balance data from the Flask backend
+// Connect to the WebSocket server
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+// Function to update both charts with new data
+function updateCharts(data) {
+    towerChart.data.datasets[0].data = [data.military, data.clergy, data.capitalists, data.workers];
+    towerChart.update();
+    pieChart.data.datasets[0].data = [data.military, data.clergy, data.capitalists, data.workers];
+    pieChart.update();
+}
+
+// Fetch initial power balance data from the Flask backend and render charts
 fetch('/api/power-balance')
     .then(response => response.json())
     .then(data => {
-        console.log(data); // Check the data format
-
         // Tower Chart (Bar Chart)
         const ctxTower = document.getElementById('towerChart').getContext('2d');
-        const towerChart = new Chart(ctxTower, {
+        window.towerChart = new Chart(ctxTower, {
             type: 'bar',
             data: {
                 labels: ['Military', 'Clergy', 'Capitalists', 'Workers'],
@@ -20,7 +29,7 @@ fetch('/api/power-balance')
 
         // Pie Chart
         const ctxPie = document.getElementById('pieChart').getContext('2d');
-        const pieChart = new Chart(ctxPie, {
+        window.pieChart = new Chart(ctxPie, {
             type: 'pie',
             data: {
                 labels: ['Military', 'Clergy', 'Capitalists', 'Workers'],
@@ -30,4 +39,17 @@ fetch('/api/power-balance')
                 }]
             }
         });
+
+        // Update the charts with the initial data
+        updateCharts(data);
     });
+
+// Listen for power balance updates from the server via WebSocket
+socket.on('updatePowerBalance', function(data) {
+    updateCharts(data);
+});
+
+// Function to process a demand (triggered by buttons in the interface)
+function processDemand(branch, action) {
+    socket.emit('processDemand', { branch: branch, action: action });
+}
