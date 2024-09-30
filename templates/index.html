@@ -26,6 +26,13 @@
         <!-- You can dynamically add demands for other branches -->
     </div>
 
+    <!-- Branch Leader's Send Demand Section -->
+    <div id="sendDemand">
+        <h2>Branch Leader Demand</h2>
+        <button onclick="processDemand('military', 'send')">Send Military Demand</button>
+        <!-- Additional buttons can be added for other branches -->
+    </div>
+
     <!-- Load JavaScript for charts and WebSocket handling -->
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 </body>
