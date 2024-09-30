@@ -47,24 +47,25 @@ def handle_demand(data):
     # Ensure the power balance stays within the limits (0-100)
     power_balance[branch] = max(0, min(power_balance[branch], 100))
 
-    # Remove processed demand from the list
-    if demands:
-        demands.pop(0)
+    # Remove the demand from the list after processing
+    demands.pop(0) if demands else None
 
-    # Broadcast updated demands and power balance to all clients
+    # Broadcast updated power balance and demands to all clients
     broadcast_power_balance()
     socketio.emit('updateDemands', demands)
+
 
 # Route for branch leaders to send a demand
 @app.route('/api/send-demand/<branch>', methods=['POST'])
 def send_demand(branch):
-    # Add demand to the list
-    demands.append(f"Demand from {branch}: Increase Power")
-    
+    demand_text = f"Demand from {branch}: Increase Power"
+    demands.append({"branch": branch, "text": demand_text})
+
     # Broadcast the new demand to all clients (especially the President)
     socketio.emit('newDemand', demands)
     
     return jsonify({"status": "Demand Sent"})
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
