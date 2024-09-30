@@ -53,3 +53,18 @@ socket.on('updatePowerBalance', function(data) {
 function processDemand(branch, action) {
     socket.emit('processDemand', { branch: branch, action: action });
 }
+
+// Update the demand inbox dynamically
+socket.on('newDemand', function(demands) {
+    const inbox = document.getElementById('demandInbox');
+    inbox.innerHTML = '';  // Clear existing demands
+
+    demands.forEach(function(demand, index) {
+        const demandDiv = document.createElement('div');
+        demandDiv.classList.add('demand');
+        demandDiv.innerHTML = `<span>${demand}</span>
+                               <button onclick="processDemand('branchName', 'pass')">Pass</button>
+                               <button onclick="processDemand('branchName', 'veto')">Veto</button>`;
+        inbox.appendChild(demandDiv);
+    });
+});
