@@ -8,12 +8,25 @@
 </head>
 <body>
     <h1>Balance of Power Interface</h1>
+
+    <!-- Charts Section -->
     <div id="charts">
-        <!-- This is where we'll place our Tower Chart and Pie Chart -->
         <canvas id="towerChart"></canvas>
         <canvas id="pieChart"></canvas>
     </div>
 
+    <!-- Demand Inbox for President -->
+    <div id="demandInbox">
+        <h2>Demand Inbox</h2>
+        <div class="demand">
+            <span>Demand from Military: Increase Power</span>
+            <button onclick="processDemand('military', 'pass')">Pass</button>
+            <button onclick="processDemand('military', 'veto')">Veto</button>
+        </div>
+        <!-- You can dynamically add demands for other branches -->
+    </div>
+
+    <!-- Load JavaScript for charts and WebSocket handling -->
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 </body>
 </html>
