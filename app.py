@@ -15,6 +15,9 @@ power_balance = {
     "workers": 50
 }
 
+# List to store incoming demands
+demands = []
+
 # Send the updated power balance to all clients in real time
 def broadcast_power_balance():
     socketio.emit('updatePowerBalance', power_balance)
@@ -46,6 +49,17 @@ def handle_demand(data):
 
     # Broadcast updated power balance to all clients
     broadcast_power_balance()
+
+# Route for branch leaders to send a demand
+@app.route('/api/send-demand/<branch>', methods=['POST'])
+def send_demand(branch):
+    # Add demand to the list
+    demands.append(f"Demand from {branch}: Increase Power")
+    
+    # Broadcast the new demand to all clients (especially the President)
+    socketio.emit('newDemand', demands)
+    
+    return jsonify({"status": "Demand Sent"})
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
